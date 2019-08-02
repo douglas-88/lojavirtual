@@ -25,8 +25,10 @@ $app->group("/admin", function(App $app){
     $app->get("[/]", "AdminController:index")->setName("home_admin")->add("Permission:Verify");
     $app->get('/login',"LoginController:index")->setName("login_form");
     $app->get('/logout',"LoginController:logout")->setName("login_out");
-    
+    $app->get("/forgot","LoginController:forgot")->setName("forgot_form");
+
     $app->post("/login","LoginController:login")->setName("login_post");
+    $app->post("/forgot","LoginController:forgotPost")->setName("forgot_post");
     
 });
 
@@ -42,6 +44,7 @@ $app->group("/admin/users", function(App $app) {
     $app->post("/{iduser}","UserController:postUpdate")->setName("user-postUpdate");
     
 })->add("Permission:Verify");
+
 
 $app->run();
 ?>
