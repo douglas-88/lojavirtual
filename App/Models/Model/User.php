@@ -2,20 +2,21 @@
 
 namespace Hcode\Model;
 
+use App\Models\Model\Mailer;
 use Hcode\DB\Sql;
 use Hcode\Model;
+use mysql_xdevapi\Exception;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\Input;
 use Zend\Filter;
 use Zend\Validator;
 use Zend\InputFilter\Factory as InputFilterFactory;
-;
-
 use Zend\I18n\Filter\Alpha;
 
 class User extends Model {
 
     const SESSION = "User";
+    const SECRET = "HcodePhp7_Secret";
     protected $mensagens;
 
     public static function login($login, $senha) {
@@ -278,6 +279,89 @@ class User extends Model {
         return $this->mensagens;
     }
 
+    public static function getForgot($email,string $urlReset){
+        $sql = new Sql();
+        $result = $sql->select("
+           SELECT * FROM
+           tb_persons a
+           INNER JOIN 
+           tb_users b ON(a.idperson = b.idperson)
+           WHERE a.desemail = :email
+        ",[":email" => $email]);
+
+       if(count($result) === 0){
+           throw new \Exception("Não foi possível recuperar a senha");
+           
+       }
+       else {
+
+           $data = $result[0];
+
+           $recoveryResult = $sql->select("CALL sp_userspasswordsrecoveries_create(:iduser,:desip)",[
+               ":iduser" => $data["iduser"],
+               ":desip"  => $_SERVER["REMOTE_ADDR"]
+           ]);
+
+           if(count($recoveryResult) === 0){
+               throw new \Exception("Não foi possível recuperar a senha");
+           }else{
+               $dataRecovery = $recoveryResult[0];
+
+               $code = base64_encode(openssl_encrypt($dataRecovery["idrecovery"],"AES-128-ECB",User::SECRET));
+
+               $link = $urlReset."/code=$code";
+
+               $mailer = new Mailer($data["desemail"],$data["desperson"],"Redefinindo Senha do Site","forgot",[
+                   "name" => $data["desperson"],
+                   "link" => $link
+               ]);
+               $mailer->send();
+
+               return $data;
+           }
+       }
+
+   }
+
+   public static function validForgotDecrypt($code){
+
+       $idRecovery = openssl_decrypt(base64_decode($code),"AES-128-ECB",User::SECRET);
+       $sql = new Sql();
+       $result = $sql->select("
+       SELECT * FROM tb_userspasswordsrecoveries a
+        INNER JOIN tb_users b ON(a.iduser = b.iduser)
+        INNER JOIN tb_persons c ON(b.idperson = c.idperson)
+        WHERE 
+           a.idrecovery = :idrecovery
+           AND
+           a.dtrecovery IS NULL
+           AND
+           DATE_ADD(a.dtregister,INTERVAL 1 HOUR) >= NOW()
+       ",[":idrecovery" => $idRecovery]);
+
+       if(count($result) === 0){
+           throw new \Exception("Não foi possível recuperar a senha.");
+       }else{
+           return $result[0];
+       }
+
+   }
+
+   public static function setForgotUsed($idrecovery){
+        $sql = new Sql();
+        $sql->query("
+        UPDATE tb_userspasswordsrecoveries SET dtrecovery = now() WHERE idrecovery = :idrecovery
+        ",[":idrecovery" => $idrecovery]);
+   }
+
+   public function setPassword($password){
+       $password_hash = password_hash($password, PASSWORD_DEFAULT, array("cost" => 12));
+
+       $sql = new Sql();
+       $result = $sql->query("
+          UPDATE tb_users SET despassword = :password WHERE iduser = :iduser
+       ",[":password" => $password_hash,":iduser" => $this->getiduser()]);
+   }
 }
 
 ?>

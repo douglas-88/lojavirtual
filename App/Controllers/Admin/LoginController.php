@@ -6,6 +6,9 @@ use Hcode\Page;
 use Hcode\PageAdmin;
 use Hcode\Model\User;
 use App\Controllers\Controller;
+use Rain\Tpl\Exception;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
 class LoginController extends Controller{
   
@@ -60,9 +63,78 @@ class LoginController extends Controller{
 
     }
 
-    public function forgotPost(){
-        var_dump($_POST);
-        exit;
+    public function forgotPost(Request $request,Response $response){
+
+      $arguments = $request->getParsedBody();
+      $urlBase = $request->getUri()->getBaseUrl();
+      $urlReset = $this->values["router"]->pathFor("forgot-reset",["code" => "123"]);
+      $urlConcat = $urlBase.$urlReset;
+      $urlFormat = substr($urlConcat,0,strrpos($urlConcat,"/"));
+
+      $user = User::getForgot($arguments["email"],$urlFormat);
+      $url = $this->getRouteByName('forgot-sent');
+      return $this->values["response"]->withHeader('Location', $url);
+     
     }
 
+    public function forgotSent(){
+
+        $options = [
+            "data" => [
+                "path_admin" => $_ENV["PATH_TEMPLATE_ADMIN"]
+            ],
+            "header" => false,
+            "footer" => false
+        ];
+        $template = new PageAdmin($options);
+        $template->setTpl("forgot-sent");
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * Ao se clicar no Link de Reset Password no e-mail, chamará esse método:
+     */
+    public function forgotReset(Request $request,Response $response){
+
+
+        $getCode = substr($request->getUri()->getPath(),strrpos($request->getUri()->getPath(),"code")+strlen("code="),strlen($request->getUri()->getPath()));
+        $user = User::validForgotDecrypt($getCode);
+        $url_form = $this->getRouteByName("forgot-resetPost");
+        $options = [
+            "data" => [
+                "path_admin" => $_ENV["PATH_TEMPLATE_ADMIN"],
+                "name"       => $user["desperson"],
+                "code"       => $getCode,
+                "urlForm"    => $url_form
+            ],
+            "header" => false,
+            "footer" => false
+        ];
+        $template = new PageAdmin($options);
+        $template->setTpl("forgot-reset");
+    }
+
+    public function forgotResetPost(Request $request,Response $response){
+        $code     = $request->getParsedBody()["code"];
+        $password = $request->getParsedBody()["password"];
+
+        $forgot = User::validForgotDecrypt($code);
+        User::setForgotUsed($forgot["idrecovery"]);
+
+        $user = new User();
+        $user->get((int) $forgot["iduser"]);
+        $user->setPassword($password);
+        $url_form = $this->getRouteByName("login_form");
+        $options = [
+            "data" => [
+                "path_admin" => $_ENV["PATH_TEMPLATE_ADMIN"],
+                "urlForm"    => $url_form
+            ],
+            "header" => false,
+            "footer" => false
+        ];
+        $template = new PageAdmin($options);
+        $template->setTpl("forgot-reset-success");
+    }
 }

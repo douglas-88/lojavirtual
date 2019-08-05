@@ -26,9 +26,12 @@ $app->group("/admin", function(App $app){
     $app->get('/login',"LoginController:index")->setName("login_form");
     $app->get('/logout',"LoginController:logout")->setName("login_out");
     $app->get("/forgot","LoginController:forgot")->setName("forgot_form");
+    $app->get("/forgot/sent","LoginController:forgotSent")->setName("forgot-sent");
+    $app->get("/forgot/reset/{code}","LoginController:forgotReset")->setName("forgot-reset");
 
     $app->post("/login","LoginController:login")->setName("login_post");
     $app->post("/forgot","LoginController:forgotPost")->setName("forgot_post");
+    $app->post("/forgot/reset","LoginController:forgotResetPost")->setName("forgot-resetPost");
     
 });
 
