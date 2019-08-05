@@ -4,3 +4,4 @@
 /resource/admin/AdminLTE-2.3/yarn.lock
 .env
 App/config.php
+.idea/

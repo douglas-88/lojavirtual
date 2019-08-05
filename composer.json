@@ -17,7 +17,8 @@
         "zendframework/zend-i18n": "^2.9",
         "php-di/slim-bridge": "^2.0",
         "php-di/php-di": "^6.0",
-        "slim/flash": "^0.4.0"
+        "slim/flash": "^0.4.0",
+        "ext-mcrypt": "*"
     },
     "autoload": {
         "psr-4": {
