@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Hcode;
+namespace Model;
 
 class Model {
     

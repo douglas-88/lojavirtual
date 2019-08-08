@@ -3,10 +3,10 @@ session_start();
 require_once("App/bootstrap.php");
 
 use App\Controllers\Admin\{AdminController,LoginController,UserController};
-use Hcode\DB\Sql;
-use Hcode\Page;
-use Hcode\PageAdmin;
-use Hcode\Model\User;
+use Model\DB\Sql;
+use Model\Page;
+use Model\PageAdmin;
+use Model\Model\User;
 use Slim\App;
 use Slim\Container;
 use Psr\Http\Message\ServerRequestInterface as Request;

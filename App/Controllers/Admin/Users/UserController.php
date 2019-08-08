@@ -2,10 +2,10 @@
 
 namespace App\Controllers\Admin\Users;
 
-use Hcode\DB\Sql;
-use Hcode\Page;
-use Hcode\PageAdmin;
-use Hcode\Model\User;
+use Model\DB\Sql;
+use Model\Page;
+use Model\PageAdmin;
+use Model\Model\User;
 use App\Controllers\Controller;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;

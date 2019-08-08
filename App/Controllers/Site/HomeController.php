@@ -3,8 +3,8 @@
 namespace App\Controllers\Site;
 
 use App\Controllers\Controller;
-use Hcode\DB\Sql;
-use Hcode\Page;
+use Model\DB\Sql;
+use Model\Page;
 
 class HomeController extends Controller {
 
