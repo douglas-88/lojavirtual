@@ -3,7 +3,7 @@
 namespace App\Middlewares;
 
 use Slim\Container;
-use Hcode\Model\User;
+use Model\Model\User;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 

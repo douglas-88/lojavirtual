@@ -4,7 +4,7 @@
 namespace App\Models\Model;
 
 use Rain\Tpl;
-use Hcode\Model;
+use Model\Model;
 
 class Mailer extends Model
 {

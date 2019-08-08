@@ -1,10 +1,10 @@
 <?php
 
-namespace Hcode\Model;
+namespace Model\Model;
 
 use App\Models\Model\Mailer;
-use Hcode\DB\Sql;
-use Hcode\Model;
+use Model\DB\Sql;
+use Model\Model;
 use mysql_xdevapi\Exception;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\Input;

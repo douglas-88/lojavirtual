@@ -1,6 +1,6 @@
 <?php 
 
-namespace Hcode\DB;
+namespace Model\DB;
 use PDO;
 
 class Sql {

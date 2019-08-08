@@ -5,7 +5,7 @@ use \App\Controllers\Site\HomeController;
 use App\Controllers\Admin\Users\UserController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Hcode\Model\User;
+use Model\Model\User;
 use Slim\Container;
 use \App\Middlewares\PermissionMiddleware;
 use \Slim\Flash\Messages;

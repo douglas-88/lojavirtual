@@ -1,8 +1,8 @@
 <?php
-namespace Hcode;
+namespace Model;
 
 use Rain\Tpl;
-use Hcode\Page;
+use Model\Page;
 
 /**
  * Esta Classe é capaz de criar páginas HTML usando o RAINTPL para gerar templates

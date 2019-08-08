@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Controllers\Admin;
-use Hcode\DB\Sql;
-use Hcode\Page;
-use Hcode\PageAdmin;
-use Hcode\Model\User;
+use Model\DB\Sql;
+use Model\Page;
+use Model\PageAdmin;
+use Model\Model\User;
 use App\Controllers\Controller;
 
 class AdminController extends Controller {
