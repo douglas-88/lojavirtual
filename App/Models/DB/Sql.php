@@ -5,21 +5,39 @@ use PDO;
 
 class Sql {
 
-	const HOSTNAME = "localhost";
-	const USERNAME = "root";
-	const PASSWORD = "nokia5233";
-	const DBNAME = "db_ecommerce";
+    private $db_driver;
+    private $db_host;
+    private $db_port;
+    private $db_name;
+    private $db_user_name;
+    private $db_user_password;
+    private $db_options;
 
-	private $conn;
+    private $conn;
 
 	public function __construct()
 	{
+        $this->db_driver = getenv('DB_CONNECTION');
+        $this->db_host = getenv('DB_HOST');
+        $this->db_port = getenv('DB_PORT');
+        $this->db_name = getenv('DB_DATABASE');
+        $this->db_user_name = getenv('DB_USERNAME');
+        $this->db_user_password = getenv('DB_PASSWORD');
+        $this->db_options = array(
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'"
+        );
 
-		$this->conn = new PDO(
-			"mysql:dbname=".Sql::DBNAME.";host=".Sql::HOSTNAME, 
-			Sql::USERNAME,
-			Sql::PASSWORD
-		);
+        try {
+            $this->conn = new PDO(
+                $this->db_driver.":dbname=".$this->db_name.";host=".$this->db_host.';port='.$this->db_port,
+                $this->db_user_name,
+                $this->db_user_password
+            );
+        } catch (\PDOException $e) {
+            var_dump($e->getMessage());
+            die;
+        }
 
 	}
 
@@ -66,5 +84,3 @@ class Sql {
 	}
 
 }
-
- ?>
