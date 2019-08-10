@@ -38,16 +38,26 @@ $app->group("/admin", function(App $app){
 //USERS ROUTE GROUP:
 $app->group("/admin/users", function(App $app) {
 
-    $app->get("[/]", "UserController:index")->setName("users-home");
-    $app->get("/create", "UserController:create")->setName("user-formCreate");
-    $app->get("/{iduser}/delete", "UserController:delete");
-    $app->get("/{iduser}", "UserController:update")->setName("user-formUpdate");
+    $app->get("[/]", "UserController:index")->setName("users-home");//Lista Usuários
+    $app->get("/create", "UserController:create")->setName("user-formCreate");//Formulário para Criar
+    $app->get("/{iduser}/delete", "UserController:delete");//Deleta Usuários
+    $app->get("/{iduser}", "UserController:update")->setName("user-formUpdate");//Formulário para Editar
 
     $app->post("/create","UserController:postCreate")->setName("user-postCreate");
     $app->post("/{iduser}","UserController:postUpdate")->setName("user-postUpdate");
     
 })->add("Permission:Verify");
 
+//CATEGORIES ROUTE GROUP:
+$app->group("/admin/categorias",function(App $app){
+    $app->get("[/]","CategoryController:index")->setName("category-home");//Lista Categorias
+    $app->get("/create","CategoryController:create")->setName("category_formCreate");//Formulário para Criar
+    $app->get("/{idcategory}","CategoryController:update")->setName("category-formUpdate");
+    $app->get("/{idcategory}/delete", "CategoryController:delete");//Deleta Categorias
+
+    $app->post("/create","CategoryController:postCreate")->setName("category_postCreate");
+    $app->post("/{idcategory}","CategoryController:postUpdate")->setName("category-postUpdate");
+})->add("Permission:Verify");
 
 $app->run();
 ?>

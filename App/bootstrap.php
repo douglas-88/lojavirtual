@@ -3,6 +3,7 @@ require_once("vendor/autoload.php");
 use App\Controllers\Admin\{AdminController,LoginController};
 use \App\Controllers\Site\HomeController;
 use App\Controllers\Admin\Users\UserController;
+use App\Controllers\Admin\Categories\CategoryController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Model\Model\User;
@@ -39,6 +40,10 @@ $container["LoginController"] = function(Container $container){
 };
 $container["AdminController"] = function(Container $container){
     return new AdminController($container);
+};
+
+$container["CategoryController"] = function (Container $container){
+    return new CategoryController($container);
 };
 
 $container["User"] = function(){
