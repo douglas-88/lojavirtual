@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Site;
+namespace Controllers\Site;
 
 use App\Controllers\Controller;
 use Model\DB\Sql;

@@ -14,7 +14,7 @@ class LoginController extends Controller{
   
     
     public function index() {
-        
+
         $url_form = $this->getRouteByName("login_form");
         $forgot_form_url = $this->getRouteByName("forgot_form");
         $options = [

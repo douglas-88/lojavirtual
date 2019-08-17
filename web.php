@@ -18,7 +18,8 @@ $dotenv->load();
 
 $app = new App($container);
 
-$app->get('/',"HomeController:index");
+$app->get('/',"HomeController:index")->setName("Home");
+$app->get('/categories/{id}',"SiteCategoryController:index");
 
 $app->group("/admin", function(App $app){
     

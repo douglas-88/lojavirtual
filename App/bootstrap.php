@@ -1,7 +1,8 @@
 <?php
 require_once("vendor/autoload.php");
 use App\Controllers\Admin\{AdminController,LoginController};
-use \App\Controllers\Site\HomeController;
+use Controllers\Site\HomeController;
+use Controllers\Site\SiteCategoryController;
 use App\Controllers\Admin\Users\UserController;
 use App\Controllers\Admin\Categories\CategoryController;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -60,6 +61,11 @@ $container["Permission"] = function(Container $container){
 $container["flash"] = function(){
     return new Messages();
 };
+
+$container["SiteCategoryController"] = function(Container $container){
+    return new SiteCategoryController($container);
+};
+
 return $container;
 ?>
 
