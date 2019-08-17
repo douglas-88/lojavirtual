@@ -34,6 +34,7 @@ class Category extends Model {
         ]);
 
         $this->setData($result[0]);
+        Category::updateFile();
     }
 
     protected function createInputFilter() {
@@ -112,6 +113,7 @@ class Category extends Model {
         ]);
 
         $this->setData($result[0]);
+        Category::updateFile();
     }
 
     public function delete() {
@@ -120,6 +122,20 @@ class Category extends Model {
         $sql->query("DELETE FROM tb_categories WHERE idcategory =:idcategory",[
             "idcategory" => $this->getidcategory()
         ]);
+        Category::updateFile();
+
+    }
+
+    public static function updateFile(){
+        $sql = new Sql();
+        $categories = $sql->select("SELECT * FROM tb_categories");
+        $html = [];
+        $file = $_SERVER["DOCUMENT_ROOT"].DIRECTORY_SEPARATOR."views".DIRECTORY_SEPARATOR."categories-menu.html";
+        foreach ($categories as $row) {
+            array_push($html, '<li><a href="/categories/'.$row["idcategory"].'">' . trim($row["descategory"]). '</a></li>'."\n");
+        }
+        file_put_contents($file,implode("",$html));
+
     }
 }
 
