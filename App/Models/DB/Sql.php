@@ -12,7 +12,7 @@ class Sql {
     private $db_user_name;
     private $db_user_password;
     private $db_options;
-
+    private $message;
     private $conn;
 
 	public function __construct()
@@ -66,9 +66,17 @@ class Sql {
 
 		$this->setParams($stmt, $params);
 
-		$stmt->execute();
+
+		if(!$stmt->execute()){
+		   $this->message = $stmt->errorInfo();
+        }else{
+		    $this->message = false;
+        }
 
 	}
+	public function getMessage(){
+	    return $this->message;
+    }
 
 	public function select($rawQuery, $params = array()):array
 	{

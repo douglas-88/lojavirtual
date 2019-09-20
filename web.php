@@ -60,5 +60,13 @@ $app->group("/admin/categorias",function(App $app){
     $app->post("/{idcategory}","CategoryController:postUpdate")->setName("category-postUpdate");
 })->add("Permission:Verify");
 
+//PRODUCTS ROUTE GROUP:
+$app->group("/admin/produtos",function(App $app){
+    $app->get("[/]","ProductController:index")->setName("product-home");//Lista Produtos
+    $app->get("/create","ProductController:create")->setName("product_formCreate");//Formulário para criar produto
+
+    $app->post("/create","ProductController:postCreate")->setName("product_postCreate");
+})->add("Permission:Verify");
+
 $app->run();
 ?>

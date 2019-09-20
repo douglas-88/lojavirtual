@@ -311,7 +311,7 @@ class User extends Model {
 
                $link = $urlReset."/code=$code";
 
-               $mailer = new Mailer($data["desemail"],$data["desperson"],"Redefinindo Senha do Site","forgot",[
+               $mailer = new Mailer($data["desemail"],$data["desperson"],"Redefinindo Senha do Produtos","forgot",[
                    "name" => $data["desperson"],
                    "link" => $link
                ]);

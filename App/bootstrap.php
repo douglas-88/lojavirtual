@@ -5,6 +5,7 @@ use Controllers\Site\HomeController;
 use Controllers\Site\SiteCategoryController;
 use App\Controllers\Admin\Users\UserController;
 use App\Controllers\Admin\Categories\CategoryController;
+use App\Controllers\Admin\Products\ProductController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Model\Model\User;
@@ -46,6 +47,9 @@ $container["AdminController"] = function(Container $container){
 $container["CategoryController"] = function (Container $container){
     return new CategoryController($container);
 };
+$container["ProductController"] = function (Container $container){
+    return new ProductController($container);
+};
 
 $container["User"] = function(){
     return new User();
@@ -65,6 +69,8 @@ $container["flash"] = function(){
 $container["SiteCategoryController"] = function(Container $container){
     return new SiteCategoryController($container);
 };
+
+
 
 return $container;
 ?>
