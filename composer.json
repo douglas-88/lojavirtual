@@ -17,13 +17,15 @@
         "zendframework/zend-i18n": "^2.9",
         "php-di/slim-bridge": "^2.0",
         "php-di/php-di": "^6.0",
-        "slim/flash": "^0.4.0"
+        "slim/flash": "^0.4.0",
+        "vlucas/valitron": "^1.4"
     },
     "autoload": {
         "psr-4": {
             "Model\\": "App\\Models\\",
             "App\\"  : "App/",
-            "Controllers\\Site\\": "App/Controllers/Site/"
+            "Controllers\\Site\\": "App/Controllers/Site/",
+            "Helpers\\": "App/Helpers/"
         }
     }
 }
