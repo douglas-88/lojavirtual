@@ -46,7 +46,7 @@ class Product extends Model {
         Validator::langDir($dir);
         Validator::lang("pt-br");
         $upload = new Upload($file);
-        $upload->upload(["nome1","nome2"],"posts_image");
+        $upload->upload(["nome1","nome2"]);
         echo("<pre>");
         var_dump($upload);
         echo("</pre>");
