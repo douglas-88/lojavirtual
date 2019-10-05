@@ -69,7 +69,9 @@ class Sql {
 
 		if(!$stmt->execute()){
 		   $this->message = $stmt->errorInfo();
-        }else{
+		   var_dump($this->message);
+		   exit;
+		   }else{
 		    $this->message = false;
         }
 

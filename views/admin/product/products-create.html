@@ -29,7 +29,7 @@
               <label for="desproduct">Nome da produto</label>
               <input type="text" class="form-control" id="desproduct" name="desproduct" placeholder="Digite o nome do produto" value="{$dados.desproduct}">
               <div style="color:red;">
-                {loop="$mensagem.erros.desproduct"}
+                {loop="$mensagem.erros.erro_nome"}
                   {$value}
                 {/loop}
               </div>
@@ -38,7 +38,7 @@
               <label for="vlprice">Preço</label>
               <input type="text" class="form-control" id="vlprice" name="vlprice" placeholder="0.00" value="{$dados.vlprice}">
               <div style="color:red;">
-                {loop="$mensagem.erros.vlprice"}
+                {loop="$mensagem.erros.erro_preco"}
                 {$value}<br>
                 {/loop}
               </div>
@@ -47,7 +47,7 @@
               <label for="vlwidth">Largura (em Metros)</label>
               <input type="text" class="form-control" id="vlwidth" name="vlwidth" step="0.01" placeholder="0.00" value="{$dados.vlwidth}">
               <div style="color:red;">
-                {loop="$mensagem.erros.vlwidth"}
+                {loop="$mensagem.erros.erro_largura"}
                 {$value}<br>
                 {/loop}
               </div>
@@ -57,7 +57,7 @@
               <input type="text" class="form-control" id="vlheight" name="vlheight" step="0.01" placeholder="0.00" value="{$dados.vlheight}">
 
               <div style="color:red;">
-                {loop="$mensagem.erros.vlheight"}
+                {loop="$mensagem.erros.erro_altura"}
                 {$value}<br>
                 {/loop}
               </div>
@@ -67,7 +67,7 @@
               <input type="text" class="form-control" id="vllength" name="vllength" step="0.01" placeholder="0.00" value="{$dados.vllength}">
 
               <div style="color:red;">
-                {loop="$mensagem.erros.vllength"}
+                {loop="$mensagem.erros.erro_comprimento"}
                 {$value}<br>
                 {/loop}
               </div>
@@ -77,7 +77,7 @@
               <input type="text" class="form-control" id="vlweight" name="vlweight" step="0.01" placeholder="0.00" value="{$dados.vlweight}">
 
               <div style="color:red;">
-                {loop="$mensagem.erros.vlweight"}
+                {loop="$mensagem.erros.erro_peso"}
                 {$value}<br>
                 {/loop}
               </div>
@@ -85,7 +85,11 @@
             <div class="form-group">
               <label for="pathphoto">Foto</label>
               <input type="file" class="form-control" class="pathphoto" name="pathphoto[]">
-              <input type="file" class="form-control" class="pathphoto" name="pathphoto[]">
+              <div style="color:red;">
+                {loop="$mensagem.erros.erro_imagem1"}
+                {$value}<br>
+                {/loop}
+              </div>
             </div>
           </div>
           <!-- /.box-body -->

@@ -9,6 +9,7 @@ use Psr\Http\Message\UploadedFileInterface;
 use Slim\Http\UploadedFile;
 use Valitron\Validator;
 use Helpers\Upload;
+use Helpers\DataValidator;
 
 class Product extends Model {
 
@@ -25,7 +26,7 @@ class Product extends Model {
 
         $sql = new Sql();
 
-       $sql->query("CALL sp_products_save(:pidproduct, :pdesproduct,:pvlprice,:pvlwidth,:pvlheight,:pvllength,:pvlweight,:pdesurl)",[
+        $sql->query("CALL sp_products_save(:pidproduct, :pdesproduct,:pvlprice,:pvlwidth,:pvlheight,:pvllength,:pvlweight,:pdesurl,:pathphoto)",[
             ":pidproduct"  => $this->getidproduct(),
             ":pdesproduct" => $this->getdesproduct(),
             ":pvlprice" => $this->getvlprice(),
@@ -33,47 +34,39 @@ class Product extends Model {
             ":pvlheight" => $this->getvlheight(),
             ":pvllength"  => $this->getvllength(),
             ":pvlweight"  => $this->getvlweight(),
-            ":pdesurl"  => $this->slug($this->getdesproduct())
+            ":pdesurl"  => $this->slug($this->getdesproduct()),
+            ":pathphoto" => $this->getpathphoto()
         ]);
-
 
     }
 
 
     public function validateProduct($data,$file = null) {
 
-        $dir = $_SERVER["DOCUMENT_ROOT"].DIRECTORY_SEPARATOR."vendor".DIRECTORY_SEPARATOR."vlucas".DIRECTORY_SEPARATOR."valitron".DIRECTORY_SEPARATOR."lang".DIRECTORY_SEPARATOR;
-        Validator::langDir($dir);
-        Validator::lang("pt-br");
         $upload = new Upload($file);
-        $upload->upload(["nome1","nome2"]);
-        echo("<pre>");
-        var_dump($upload);
-        echo("</pre>");
-        exit;
+        $upload->validImage();
 
-        $validador = new Validator($data);
-        $validador->rule('required', ['desproduct', 'vlprice','vlwidth','vlheight','vllength','vlweight']);
-        $validador->rule("lengthMax",'desproduct',100);
-        $validador->labels(
-                            [
-                             "desproduct" => "Nome do Produto",
-                             "vlprice"    => "o preço do produto",
-                             "vlwidth"    => "a largura",
-                             "vlheight"   => "a altura",
-                             "vllength"   => "o comprimento",
-                             "vlweight"   => "o peso"
-                            ]
-                          );
+        $data["image"] = $upload->file;
 
+        $v = new DataValidator();
+        $v->define_pattern('erro_');
+        $v->set("nome", $data["desproduct"])->is_required()->max_length(100);
+        $v->set("preco", $data["vlprice"])->is_required();
+        $v->set("largura", $data["vlwidth"])->is_required();
+        $v->set("altura", $data["vlheight"])->is_required();
+        $v->set("comprimento", $data["vllength"])->is_required();
+        $v->set("peso", $data["vlweight"])->is_required();
+        $v->set("imagem1",$data["image"][0]["status"])->checkImage($data["image"][0]["message"]);
 
-        if ($validador->validate()) {
+        if ($v->validate()) {
             $this->setdesproduct($data["desproduct"]);
             $this->setvlprice($data["vlprice"]);
             $this->setvlwidth($data["vlwidth"]);
             $this->setvlheight($data["vlheight"]);
             $this->setvllength($data["vllength"]);
             $this->setvlweight($data["vlweight"]);
+            $upload->upload(["nome1"]);
+            $this->setpathphoto($upload->file[0]["message"]);
 
             return true;
         }else{
@@ -83,7 +76,8 @@ class Product extends Model {
             $this->setvlheight($data["vlheight"]);
             $this->setvllength($data["vllength"]);
             $this->setvlweight($data["vlweight"]);
-            $messages["erros"] = $validador->errors();
+            $this->setpathphoto("deu errado");
+            $messages["erros"] = $v->get_errors();
             $this->mensagens = $messages;
 
             return false;

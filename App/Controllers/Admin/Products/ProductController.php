@@ -18,6 +18,8 @@ class ProductController extends Controller {
         $url_logout    = $this->getRouteByName("login_out");
         $url_cadastrar = $this->getRouteByName("product_formCreate");
         $home_admin    = $this->getRouteByName("home_admin");
+        $routeHome     = $this->getRouteByName("Home");
+
 
         $options =
         [
@@ -28,7 +30,8 @@ class ProductController extends Controller {
                         "appname"     => getenv("APP_NAME"),
                         "url_logout"  => $url_logout,
                         "url_form"    => $url_cadastrar,
-                        "home_admin"  => $home_admin
+                        "home_admin"  => $home_admin,
+                        "urlHome"     => $routeHome
                       ]
         ];
         $template = new PageAdmin($options);
@@ -65,13 +68,6 @@ class ProductController extends Controller {
     public function postCreate(Request $request,Response $response){
          $post = $request->getParsedBody();
          $file = $request->getUploadedFiles();
-         //move_uploaded_file($_FILES["pathphoto"]["tmp_name"],"/var/www/".$_FILES['pathphoto']['name']);
-        /*
-        echo("<pre>");
-        var_dump($file["pathphoto"]);
-        echo("</pre>");
-        exit;
-        */
 
          $product = new Product();
 

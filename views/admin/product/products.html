@@ -33,7 +33,7 @@
                     <th>Altura</th>
                     <th>Comprimento</th>
                     <th>Peso</th>
-                    <th style="width: 140px">&nbsp;</th>
+                    <th>Imagem</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -46,6 +46,7 @@
                     <td>{$value.vlheight} M</td>
                     <td>{$value.vllength} M</td>
                     <td>{$value.vlweight} Kg</td>
+                    <td><img src="{$urlHome}{$value.pathphoto}" alt="" width="100"></td>
                     <td>
                       <a href="/admin/products/{$value.idproduct}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Editar</a>
                       <a href="/admin/products/{$value.idproduct}/delete" onclick="return confirm('Deseja realmente excluir este registro?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</a>

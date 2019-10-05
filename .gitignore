@@ -1,5 +1,6 @@
 /nbproject/
 /vendor/
+/uploads/
 /views-cache/
 /resource/admin/AdminLTE-2.3/yarn.lock
 .env
