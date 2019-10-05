@@ -9,6 +9,7 @@ use Model\PageAdmin;
 use App\Controllers\Controller;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Model\Model\Category;
 
 class ProductController extends Controller {
 
@@ -17,6 +18,7 @@ class ProductController extends Controller {
         $products = Product::listAll();
         $url_logout    = $this->getRouteByName("login_out");
         $url_cadastrar = $this->getRouteByName("product_formCreate");
+
         $home_admin    = $this->getRouteByName("home_admin");
         $routeHome     = $this->getRouteByName("Home");
 
@@ -32,6 +34,7 @@ class ProductController extends Controller {
                         "url_form"    => $url_cadastrar,
                         "home_admin"  => $home_admin,
                         "urlHome"     => $routeHome
+
                       ]
         ];
         $template = new PageAdmin($options);
@@ -87,37 +90,42 @@ class ProductController extends Controller {
     }
 
     public function update(Request $request,Response $response){
+
         $url_logout    = $this->getRouteByName("login_out");
         $home_admin    = $this->getRouteByName("home_admin");
-        $idcategory      = end(explode("/",$request->getUri()->getPath()));
+        $idproduct     = end(explode("/",$request->getUri()->getPath()));
 
         if(!is_null($this->values["container"]->flash->getMessages())):
             $erros = $this->values["container"]->flash->getMessage("mensagem")[0];
             $dados = $this->values["container"]->flash->getMessage("dados")[0];
         endif;
 
-        $category = new Category();
-        if(!$category->get($idcategory)){
-            $url = $this->getRouteByName("category-home");
+        $url_logout    = $this->getRouteByName("login_out");
+        $url_cadastrar = $this->getRouteByName("product_postUpdate",["idproduct"=>$idproduct]);
+
+        $product = new Product();
+        if(!$product->get($idproduct)){
+            $url = $this->getRouteByName("product-home");
             return $response->withRedirect($url);
         }
-        $category->get($idcategory);
+        $product->get($idproduct);
+
         $options =
             [
                 "data" => [
                     "path_admin"  => $_ENV["PATH_TEMPLATE_ADMIN"],
+                    "mensagem"    => ($erros) ?? false,
                     "username"    => $_SESSION[User::SESSION]["deslogin"],
                     "appname"     => getenv("APP_NAME"),
                     "url_logout"  => $url_logout,
-                    "category"    => $category->getValues(),
-                    "home_admin"  => $home_admin,
-                    "mensagem"    => ($erros) ?? false,
-                    "dados"       => (isset($dados)) ? $dados : $category->getdescategory()
+                    "url_form"    => $url_cadastrar,
+                    "product"     => $product->getValues()
                 ]
             ];
+
         $template = new PageAdmin($options);
 
-        return $template->setTpl("category/categories-update");
+        return $template->setTpl("product/products-update");
     }
 
     public function postUpdate(Request $request,Response $response){

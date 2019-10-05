@@ -64,8 +64,10 @@ $app->group("/admin/categorias",function(App $app){
 $app->group("/admin/produtos",function(App $app){
     $app->get("[/]","ProductController:index")->setName("product-home");//Lista Produtos
     $app->get("/create","ProductController:create")->setName("product_formCreate");//Formulário para criar produto
+    $app->get("/{idproduct}","ProductController:update")->setName("product_formUpdate");
 
     $app->post("/create","ProductController:postCreate")->setName("product_postCreate");
+    $app->post("/{idproduct}","ProductController:postUpdate")->setName("product_postUpdate");
 })->add("Permission:Verify");
 
 $app->run();
