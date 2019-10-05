@@ -88,10 +88,10 @@ class Product extends Model {
         return $this->mensagens;
     }
 
-    public function get(int $idcategory) {
+    public function get(int $idproduct) {
         $sql = new Sql();
-        $result = $sql->select("SELECT * FROM tb_categories WHERE idcategory = :ID", array(
-            ":ID" => $idcategory
+        $result = $sql->select("SELECT * FROM  tb_products WHERE 	idproduct = :ID", array(
+            ":ID" => $idproduct
         ));
 
         if(count($result) < 0){
