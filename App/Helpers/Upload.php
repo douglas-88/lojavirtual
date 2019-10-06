@@ -33,6 +33,10 @@ class Upload extends Model{
 
    }
 
+   public function getStatus(){
+       return $this->file;
+   }
+
     public function statusFile(){
 
        for($i = 0; $i < count($this->file); $i++) {
@@ -114,16 +118,9 @@ class Upload extends Model{
     }
     public function upload($nameFile,$folder_opt = null)
     {
-        $this->statusFile();
-        $this->checkSizeFile();
-        $this->checkExtension();
-
         $ano      = date("Y");
         $mes      = date("m");
         $dia      = date("d");
-        $hora     = date("H");
-        $minuto   = date("i");
-        $segundos = date("s");
 
         for($i = 0;$i < count($this->file);$i++){
 
@@ -132,16 +129,16 @@ class Upload extends Model{
                 if (!is_null($folder_opt)) {
                     $pathCustom = $this->upload_dir . DIRECTORY_SEPARATOR . $folder_opt . DIRECTORY_SEPARATOR .$ano.DIRECTORY_SEPARATOR . $mes . DIRECTORY_SEPARATOR .$dia .DIRECTORY_SEPARATOR;
                     if (!file_exists($pathCustom)) {
-                        mkdir($pathCustom, 0777,true);
-                        chmod($pathCustom,0777);
+                        mkdir($pathCustom, 0755,true);
+                        chmod($pathCustom,0755);
                         $dir = $pathCustom;
                     }else{
                         $dir = $pathCustom;
                     }
                 }else{
                     $pathDefault = $this->upload_dir . DIRECTORY_SEPARATOR .$ano.DIRECTORY_SEPARATOR . $mes . DIRECTORY_SEPARATOR .$dia .DIRECTORY_SEPARATOR;
-                    mkdir($pathDefault,0777,true);
-                    chmod($pathDefault,0777);
+                    mkdir($pathDefault,0755,true);
+                    chmod($pathDefault,0755);
                     $dir = $pathDefault;
                 }
                 //Se encarrega de os arquivos NÃO irem com nomes repetidos:
@@ -153,13 +150,22 @@ class Upload extends Model{
                 $moveTo = $dir.$nameFile[$i] . "." . $this->file[$i]["type"];
 
                 move_uploaded_file($fileTemp, $moveTo);
-                chmod($moveTo,0777);
+                chmod($moveTo,0755);
                 if(file_exists($moveTo)){
-                    $this->file[$i]["message"] = "Arquivo Enviado com Sucesso!";
+
+                    $path = substr($moveTo,strpos($moveTo,"uploads"));
+
+                    $this->file[$i]["message"] = $path;
                 }
             }
         }
 
+    }
+
+    public function validImage(){
+        $this->statusFile();
+        $this->checkSizeFile();
+        $this->checkExtension();
     }
 
     public function checkFileExist($FileName){
