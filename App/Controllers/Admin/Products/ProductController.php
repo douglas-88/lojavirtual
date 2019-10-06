@@ -117,6 +117,7 @@ class ProductController extends Controller {
                     "mensagem"    => ($erros) ?? false,
                     "username"    => $_SESSION[User::SESSION]["deslogin"],
                     "appname"     => getenv("APP_NAME"),
+                    "dados"       => (isset($dados)) ? $dados : $product->getValues(),
                     "url_logout"  => $url_logout,
                     "url_form"    => $url_cadastrar,
                     "product"     => $product->getValues()
@@ -129,33 +130,42 @@ class ProductController extends Controller {
     }
 
     public function postUpdate(Request $request,Response $response){
-        $categoryName = $request->getParsedBodyParam("descategory");
-        $idcategory  = end(explode("/",$request->getUri()->getPath()));
-        $category = new Category();
-        $category->setData(["idcategory" => $idcategory,"descategory" => $categoryName]);
+        $post = $request->getParsedBody();
+        $file = $request->getUploadedFiles();
+        $idproduct  = end(explode("/",$request->getUri()->getPath()));
 
-        if(!$category->validateCategory(["descategory" => $category->getdescategory()])){
-            $this->values["container"]->flash->addMessage("mensagem",$category->getMensagens());
-            $this->values["container"]->flash->addMessage("dados",$category->getValues());
-            $url = $this->getRouteByName("category-formUpdate",["idcategory" => $category->getidcategory()]);
+        $product = new Product();
+        $product->setData(["idproduct" => $idproduct]);
+
+        if(!$product->validateProduct($post,($file["pathphoto"][0]->getError() == 0) ? $file["pathphoto"] : null)){
+
+            $this->values["container"]->flash->addMessage("mensagem",$product->getMensagens());
+            $this->values["container"]->flash->addMessage("dados",$product->getValues());
+            $url = $this->getRouteByName("product_formUpdate",["idproduct" => $idproduct]);
 
         }else{
-            $category->update();
-            $url = $this->getRouteByName("category-home");
-        }
+            $product->setData(["idproduct" => $idproduct]);
+            if($file["pathphoto"][0]->getError() !== 0):
+                $sql = new Sql();
+                $image = $sql->select("select * from tb_products WHERE idproduct =:ID",[":ID" => $idproduct])[0]["pathphoto"];
+                $product->setData(["pathphoto" => $image]);
+            endif;
+            $product->update();
+            $url = $this->getRouteByName("product-home");
 
+        }
 
         return $response->withRedirect($url);
     }
 
     public function delete(Request $request,Response $response) {
 
-        $idcategory  = explode("/",$request->getUri()->getPath())[3];
+        $idproduct  = explode("/",$request->getUri()->getPath())[3];
 
-        $category = new Category();
-        $category->get($idcategory);
-        $category->delete();
-        $url = $this->getRouteByName("category-home");
+        $product = new Product();
+        $product->get($idproduct);
+        $product->delete();
+        $url = $this->getRouteByName("product-home");
         return $response->withRedirect($url);
     }
 
