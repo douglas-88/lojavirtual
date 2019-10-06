@@ -56,7 +56,9 @@ class Product extends Model {
         $v->set("altura", $data["vlheight"])->is_required();
         $v->set("comprimento", $data["vllength"])->is_required();
         $v->set("peso", $data["vlweight"])->is_required();
-        $v->set("imagem1",$data["image"][0]["status"])->checkImage($data["image"][0]["message"]);
+        if(!is_null($file)):
+            $v->set("imagem1",$data["image"][0]["status"])->checkImage($data["image"][0]["message"]);
+        endif;
 
         if ($v->validate()) {
             $this->setdesproduct($data["desproduct"]);
@@ -65,8 +67,10 @@ class Product extends Model {
             $this->setvlheight($data["vlheight"]);
             $this->setvllength($data["vllength"]);
             $this->setvlweight($data["vlweight"]);
-            $upload->upload(["nome1"]);
-            $this->setpathphoto($upload->file[0]["message"]);
+            if(!is_null($file)):
+                $upload->upload(["nome1"]);
+                $this->setpathphoto($upload->file[0]["message"]);
+            endif;
 
             return true;
         }else{
@@ -106,9 +110,16 @@ class Product extends Model {
     public function update(){
         $sql = new Sql();
 
-        $result = $sql->query("CALL sp_categories_save(:idcategory, :descategory)",[
-            ":idcategory"  => $this->getidcategory(),
-            ":descategory" => $this->getdescategory()
+        $result = $sql->query("CALL sp_products_save(:pidproduct, :pdesproduct,:pvlprice,:pvlwidth,:pvlheight,:pvllength,:pvlweight,:pdesurl,:ppathphoto)",[
+            ":pidproduct"   => $this->getidproduct(),
+            ":pdesproduct"  => $this->getdesproduct(),
+            ":pvlprice"     => $this->getvlprice(),
+            ":pvlwidth"     => $this->getvlwidth(),
+            ":pvlheight"    => $this->getvlheight(),
+            ":pvllength"    => $this->getvllength(),
+            ":pvlweight"    => $this->getvlweight(),
+            ":pdesurl"      => $this->slug($this->getdesproduct()),
+            ":ppathphoto"   => $this->getpathphoto()
         ]);
 
         $this->setData($result[0]);
@@ -118,8 +129,8 @@ class Product extends Model {
     public function delete() {
 
         $sql = new Sql();
-        $sql->query("DELETE FROM tb_categories WHERE idcategory =:idcategory",[
-            "idcategory" => $this->getidcategory()
+        $sql->query("DELETE FROM  tb_products WHERE idproduct =:ID",[
+            ":ID" => $this->getidproduct()
         ]);
 
     }
