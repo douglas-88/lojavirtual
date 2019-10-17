@@ -13,12 +13,16 @@ class Upload extends Model{
     protected $max_upload_size;
     protected $extension_supported;
     protected $upload_dir;
+    protected $width;
+    protected $height;
 
-   public function __construct($file)
+   public function __construct($file,$width,$height)
    {
        $this->max_upload_size     = getenv("MAX_UPLOAD_SIZE") * 1048576;//Convertendo de MegaBytes para Bytes.
        $this->extension_supported = explode(",",getenv("EXTENSION_ALLOWED"));
        $this->upload_dir          = getenv("UPLOAD_DIR");
+       $this->width               = $width;
+       $this->height              = $height;
 
        for($i = 0; $i < count($file);$i++){
            $this->file[$i]["tmp"]         = $file[$i]->file;
@@ -148,8 +152,8 @@ class Upload extends Model{
                 //Faz o UPLOAD:
                 $fileTemp = $this->file[$i]["tmp"];
                 $moveTo = $dir.$nameFile[$i] . "." . $this->file[$i]["type"];
-
-                move_uploaded_file($fileTemp, $moveTo);
+                $this->imageResize($fileTemp,$this->file[$i]["type"],$moveTo,$this->width,$this->height);
+                //move_uploaded_file($fileTemp, $moveTo);
                 chmod($moveTo,0755);
                 if(file_exists($moveTo)){
 
@@ -178,6 +182,37 @@ class Upload extends Model{
            }
 
         return $nameFile;
+    }
+
+    private function imageResize($img_file,$type, $folder,$new_width, $new_height, $proportion = true){
+
+        list($width, $height) =  getimagesize($img_file);
+
+        if ($proportion) {
+            if ($width > $height) {
+                $new_height = ($new_width  / $width) * $height;
+
+            } elseif ($width < $height) {
+                $new_width = ($new_height / $height) * $width;
+            }
+        }
+
+        $nova_imagem  = imagecreatetruecolor($new_width, $new_height);
+
+
+        if($type == "jpeg" or $type == "jpg"){
+            $img_original = imagecreatefromjpeg($img_file);
+            imagecopyresampled($nova_imagem, $img_original, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+            imagejpeg($nova_imagem , $folder,75);
+        }if($type == "png"){
+            $img_original = imagecreatefrompng($img_file);
+            imagecopyresampled($nova_imagem, $img_original, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+            imagepng($nova_imagem , $folder,7);
+        }
+
+
+        imagedestroy($img_original);
+        imagedestroy($nova_imagem);
     }
 
 }

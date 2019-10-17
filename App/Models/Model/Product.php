@@ -48,7 +48,7 @@ class Product extends Model {
 
     public function validateProduct($data,$file = null) {
 
-        $upload = new Upload($file);
+        $upload = new Upload($file,200,300);
         $upload->validImage();
 
         $data["image"] = $upload->file;
