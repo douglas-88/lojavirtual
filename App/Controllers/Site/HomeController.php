@@ -5,12 +5,19 @@ namespace Controllers\Site;
 use App\Controllers\Controller;
 use Model\DB\Sql;
 use Model\Page;
+use Model\Model\Product;
 
 class HomeController extends Controller {
 
     public function index() {
 
-        $options = array("data" => array("path_loja" => $_ENV["PATH_TEMPLATE_LOJA"]));
+        $options = [
+                      "data" => [
+                                    "path_loja" => $_ENV["PATH_TEMPLATE_LOJA"],
+                                    "produtos"  => Product::listAll(),
+                                    "urlRoot"   => $this->getRouteByName("Home")
+                                ]
+                   ];
         $template = new Page($options);
         $template->setTpl("index");
     }

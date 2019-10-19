@@ -18,7 +18,9 @@ class Product extends Model {
     public static function listAll(){
         $sql = new Sql();
         $result = $sql->select("SELECT * FROM tb_products ORDER BY desproduct");
-
+        foreach ($result as &$res):
+            $res["vlprice"] = self::formatPrice($res["vlprice"]);
+        endforeach;
         return $result;
     }
 
@@ -40,10 +42,13 @@ class Product extends Model {
 
     }
 
+    public static function formatPrice($value){
+        return number_format($value,2,",",".");
+    }
 
     public function validateProduct($data,$file = null) {
 
-        $upload = new Upload($file);
+        $upload = new Upload($file,200,300);
         $upload->validImage();
 
         $data["image"] = $upload->file;
@@ -62,7 +67,7 @@ class Product extends Model {
 
         if ($v->validate()) {
             $this->setdesproduct($data["desproduct"]);
-            $this->setvlprice($data["vlprice"]);
+            $this->setvlprice(str_replace(",",".",str_replace(".","",$data["vlprice"])));
             $this->setvlwidth($data["vlwidth"]);
             $this->setvlheight($data["vlheight"]);
             $this->setvllength($data["vllength"]);
