@@ -16,6 +16,7 @@ class SiteCategoryController extends Controller {
     public function index(Request $request,Response $response) {
         $route = $request->getAttribute('route');
         $idcategory = $route->getArgument("id");
+        $routeHome     = $this->getRouteByName("Home");
 
         $category = new Category();
         if(!$category->get($idcategory)){
@@ -29,7 +30,9 @@ class SiteCategoryController extends Controller {
         $options = [
                      "data" => [
                                    "path_loja" => $_ENV["PATH_TEMPLATE_LOJA"],
-                                    "category" => $value
+                                    "category" => $value,
+                                     "productsRelated" => $category->getProducts(),
+                                    "urlHome" => $routeHome
                                ]
                    ];
         $template = new Page($options);

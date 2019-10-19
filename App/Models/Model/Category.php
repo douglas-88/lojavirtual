@@ -125,7 +125,9 @@ class Category extends Model {
         Category::updateFile();
 
     }
-
+    public static function formatPrice($value){
+        return number_format($value,2,",",".");
+    }
     public static function updateFile(){
         $sql = new Sql();
         $categories = $sql->select("SELECT * FROM tb_categories");
@@ -137,6 +139,40 @@ class Category extends Model {
         file_put_contents($file,implode("",$html));
 
     }
+
+    public function getProducts($related = true){
+
+
+        $sql = new Sql();
+        if($related){
+           $products = $sql->select("
+              SELECT * FROM tb_products WHERE idproduct IN(
+                   SELECT a.idproduct
+                      FROM tb_products a 
+                         INNER JOIN
+                           tb_categoriesproducts b ON(a.idproduct = b.idproduct) 
+                              WHERE b.idcategory = :idcategory
+              )
+           ",[":idcategory" => $this->getValues()["idcategory"]]);
+
+        }else{
+            $products = $sql->select("
+              SELECT * FROM tb_products WHERE idproduct NOT IN(
+                   SELECT a.idproduct
+                      FROM tb_products a 
+                         INNER JOIN
+                           tb_categoriesproducts b ON(a.idproduct = b.idproduct) 
+                              WHERE b.idcategory = :idcategory
+              )
+           ",[":idcategory" => $this->getValues()["idcategory"]]);
+        }
+        foreach ($products as &$res):
+            $res["vlprice"] = self::formatPrice($res["vlprice"]);
+        endforeach;
+        return $products;
+    }
+
+
 }
 
 ?>

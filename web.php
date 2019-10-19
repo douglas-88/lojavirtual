@@ -55,6 +55,9 @@ $app->group("/admin/categorias",function(App $app){
     $app->get("/create","CategoryController:create")->setName("category_formCreate");//Formulário para Criar
     $app->get("/{idcategory}","CategoryController:update")->setName("category-formUpdate");
     $app->get("/{idcategory}/delete", "CategoryController:delete");//Deleta Categorias
+    $app->get("/{idcategory}/produtos", "CategoryController:listProduct")->setName("list_product_cat");
+    $app->get("/{idcategory}/produtos/{idproduct}/add", "CategoryController:addProduct");//Deleta Categorias
+    $app->get("/{idcategory}/produtos/{idproduct}/remove", "CategoryController:removeProduct");//Deleta Categorias
 
     $app->post("/create","CategoryController:postCreate")->setName("category_postCreate");
     $app->post("/{idcategory}","CategoryController:postUpdate")->setName("category-postUpdate");
