@@ -144,4 +144,60 @@ class CategoryController extends Controller {
         return $response->withRedirect($url);
     }
 
+
+    public function listProduct(Request $request,Response $response){
+
+        $idcategory  = $request->getAttribute('idcategory');
+
+        $category = new Category();
+        $category->get($idcategory);
+
+        $category->getProducts();
+        $options =
+            [
+                "data" => [
+                    "path_admin"  => $_ENV["PATH_TEMPLATE_ADMIN"],
+                    "username"    => $_SESSION[User::SESSION]["deslogin"],
+                    "appname"     => getenv("APP_NAME"),
+                    "url_logout"  => $url_logout,
+                    "category"    => $category->getValues(),
+                    "home_admin"  => $home_admin,
+                    "productsNotRelated" => $category->getProducts(false),
+                    "productsRelated" => $category->getProducts()
+                ]
+            ];
+        $template = new PageAdmin($options);
+
+        return $template->setTpl("category/categories-products");
+
+    }
+
+    public function addProduct(Request $request,Response $response){
+        $idcategory  = $request->getAttribute('idcategory');
+        $idproduct  = $request->getAttribute('idproduct');
+
+        $sql = new Sql();
+        $sql->query("INSERT INTO tb_categoriesproducts (idcategory,idproduct) VALUES (:idcategory,:idproduct)",[
+            ":idcategory" => $idcategory,
+            ":idproduct" => $idproduct,
+        ]);
+
+        $url = $this->getRouteByName("list_product_cat",["idcategory" => $idcategory,"idproduct" => $idproduct]);
+        return $response->withRedirect($url);
+    }
+
+    public function removeProduct(Request $request,Response $response){
+        $idcategory  = $request->getAttribute('idcategory');
+        $idproduct  = $request->getAttribute('idproduct');
+
+        $sql = new Sql();
+        $sql->query("DELETE FROM tb_categoriesproducts WHERE idcategory = :idcategory AND idproduct = :idproduct",[
+            ":idcategory" => $idcategory,
+            ":idproduct" => $idproduct,
+        ]);
+
+        $url = $this->getRouteByName("list_product_cat",["idcategory" => $idcategory,"idproduct" => $idproduct]);
+        return $response->withRedirect($url);
+    }
+
 }
