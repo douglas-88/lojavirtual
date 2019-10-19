@@ -43,8 +43,11 @@ class SiteCategoryController extends Controller {
                                     "category" => $value,
                                     "productsRelated" => $pagination["data"],
                                     "pages" => $pages,
+                                    "qtd_pages" => $pagination["pages"],
                                     "current_page" => $page,
-                                    "urlHome" => $routeHome
+                                    "urlHome" => $routeHome,
+                                    "prev" => "/categories/{$idcategory}?page=".($page - 1)."#produtos",
+                                    "next" => "/categories/{$idcategory}?page=".($page + 1)."#produtos"
                                ]
                    ];
         $template = new Page($options);

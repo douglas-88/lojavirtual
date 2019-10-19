@@ -38,11 +38,19 @@
                 <div class="product-pagination text-center">
                     <nav>
                         <ul class="pagination">
-                        <li>
-                            <a href="#" aria-label="Próxima">
-                            <span aria-hidden="true">«</span>
-                            </a>
-                        </li>
+                        {if="$current_page == 1"}
+                            <li class="hidden">
+                                <a href="{$prev}"  aria-label="Anterior">
+                                <span aria-hidden="true">«</span>
+                                </a>
+                            </li>
+                        {else}
+                            <li>
+                                <a href="{$prev}"  aria-label="Anterior">
+                                    <span aria-hidden="true">«</span>
+                                </a>
+                            </li>
+                        {/if}
                             {loop="$pages"}
                               <li
                                       {if="$current_page == $value.page"}
@@ -50,11 +58,20 @@
                                       {/if}
                                 ><a href="{$value.link}">{$value.page}</a></li>
                             {/loop}
-                        <li>
-                            <a href="#" aria-label="Anterior">
-                            <span aria-hidden="true">»</span>
-                            </a>
-                        </li>
+                            {if="$current_page < $qtd_pages "}
+                                <li>
+                                    <a href="{$next}" aria-label="Próxima">
+                                        <span aria-hidden="true">»</span>
+                                    </a>
+                                </li>
+                            {else}
+                                <li class="hidden">
+                                    <a href="{$next}" aria-label="Próxima">
+                                        <span aria-hidden="true">»</span>
+                                    </a>
+                                </li>
+                            {/if}
+
                         </ul>
                     </nav>                        
                 </div>
@@ -62,3 +79,4 @@
         </div>
     </div>
 </div>
+
