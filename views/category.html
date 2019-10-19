@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<div class="single-product-area">
+<div class="single-product-area" id="produtos">
     <div class="zigzag-bottom"></div>
     <div class="container">
         <div class="row">
@@ -39,17 +39,19 @@
                     <nav>
                         <ul class="pagination">
                         <li>
-                            <a href="#" aria-label="Previous">
+                            <a href="#" aria-label="Próxima">
                             <span aria-hidden="true">«</span>
                             </a>
                         </li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
+                            {loop="$pages"}
+                              <li
+                                      {if="$current_page == $value.page"}
+                                        class="active"
+                                      {/if}
+                                ><a href="{$value.link}">{$value.page}</a></li>
+                            {/loop}
                         <li>
-                            <a href="#" aria-label="Next">
+                            <a href="#" aria-label="Anterior">
                             <span aria-hidden="true">»</span>
                             </a>
                         </li>

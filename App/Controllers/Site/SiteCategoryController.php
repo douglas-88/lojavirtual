@@ -18,20 +18,32 @@ class SiteCategoryController extends Controller {
         $idcategory = $route->getArgument("id");
         $routeHome     = $this->getRouteByName("Home");
 
+
         $category = new Category();
+
         if(!$category->get($idcategory)){
             $url = $this->getRouteByName("Home");
             return $response->withRedirect($url);
         }else{
             $value = $category->get($idcategory);
         }
+        $page = (isset($_GET["page"])) ? intval($_GET["page"]) : 1;
+        $pagination = $category->getProductsPage($page);
 
-
+        $pages = [];
+        for ($i = 1; $i < $pagination["total"] ; $i++){
+            array_push($pages,[
+                "link" => "/categories/{$idcategory}?page=".$i."#produtos",
+                "page" => $i
+            ]);
+        }
         $options = [
                      "data" => [
                                    "path_loja" => $_ENV["PATH_TEMPLATE_LOJA"],
                                     "category" => $value,
-                                     "productsRelated" => $category->getProducts(),
+                                    "productsRelated" => $pagination["data"],
+                                    "pages" => $pages,
+                                    "current_page" => $page,
                                     "urlHome" => $routeHome
                                ]
                    ];

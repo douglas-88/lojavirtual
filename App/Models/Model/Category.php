@@ -172,6 +172,27 @@ class Category extends Model {
         return $products;
     }
 
+    public function getProductsPage($page = 1,$itensPerPage = 2){
+
+        $start = ($page -1) * $itensPerPage;
+        $sql = new Sql();
+        $products = $sql->select("SELECT * FROM tb_products a 
+            INNER JOIN tb_categoriesproducts b ON(a.idproduct = b.idproduct)
+            INNER JOIN tb_categories c ON(b.idcategory = c.idcategory)
+            WHERE c.idcategory = :idcategory LIMIT $start,$itensPerPage"  ,[":idcategory" => $this->getValues()["idcategory"]]);
+
+         $qtdProducts = $sql->select("SELECT count(*) as qtd FROM tb_products a 
+            INNER JOIN tb_categoriesproducts b ON(a.idproduct = b.idproduct)
+            INNER JOIN tb_categories c ON(b.idcategory = c.idcategory)
+            WHERE c.idcategory = :idcategory",[":idcategory" => $this->getValues()["idcategory"]]);
+             
+         return [
+                    "data"  => $products,
+                    "total" => intval($qtdProducts[0]["qtd"]),
+                    "pages" => ceil( $qtdProducts[0]["qtd"] / intval($itensPerPage))
+                ];
+
+    }
 
 }
 
