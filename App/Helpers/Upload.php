@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Upload Class.
+ *
+ * @author Douglas Fernando Ferreira Braga
+ * @author Email <<dcdouglas64@gmail.com>>
+ * @author GitHub <https://github.com/DouglasFFBraga/lojavirtual>
+ * @version 0.1
+ */
 namespace Helpers;
 
 use Model\Model;
@@ -184,7 +191,19 @@ class Upload extends Model{
         return $nameFile;
     }
 
-    private function imageResize($img_file,$type, $folder,$new_width, $new_height, $proportion = true){
+
+    /**
+     * Função para Redimencionar Imagem.
+     * @access private
+     * @param $img_file
+     * @param $type
+     * @param $folder
+     * @param $new_width
+     * @param $new_height
+     * @param bool $proportion
+     * @return void
+     */
+    private function imageResize($img_file, $type, $folder, $new_width, $new_height, $proportion = true){
 
         list($width, $height) =  getimagesize($img_file);
 
@@ -198,6 +217,10 @@ class Upload extends Model{
         }
 
         $nova_imagem  = imagecreatetruecolor($new_width, $new_height);
+        imagealphablending ($nova_imagem, true);
+        imagesavealpha ($nova_imagem, true);
+        $bgcolor = imagecolorallocatealpha ($nova_imagem, 0, 0, 0, 127);
+        imagefill ($nova_imagem, 0, 0, $bgcolor);
 
 
         if($type == "jpeg" or $type == "jpg"){
@@ -205,6 +228,7 @@ class Upload extends Model{
             imagecopyresampled($nova_imagem, $img_original, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
             imagejpeg($nova_imagem , $folder,75);
         }if($type == "png"){
+
             $img_original = imagecreatefrompng($img_file);
             imagecopyresampled($nova_imagem, $img_original, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
             imagepng($nova_imagem , $folder,7);
