@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Product Class.
+ *
+ * @author Douglas Fernando Ferreira Braga
+ * @author Email <<dcdouglas64@gmail.com>>
+ * @author GitHub <https://github.com/DouglasFFBraga/lojavirtual>
+ * @version 0.1
+ */
 namespace Model\Model;
 
 
@@ -48,7 +55,7 @@ class Product extends Model {
 
     public function validateProduct($data,$file = null) {
 
-        $upload = new Upload($file,200,300);
+        $upload = new Upload($file,200,200);
         $upload->validImage();
 
         $data["image"] = $upload->file;
@@ -73,7 +80,7 @@ class Product extends Model {
             $this->setvllength($data["vllength"]);
             $this->setvlweight($data["vlweight"]);
             if(!is_null($file)):
-                $upload->upload(["nome1"]);
+                $upload->upload([$this->slug($this->getdesproduct())]);
                 $this->setpathphoto($upload->file[0]["message"]);
             endif;
 
