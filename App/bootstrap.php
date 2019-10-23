@@ -3,6 +3,7 @@ require_once("vendor/autoload.php");
 use App\Controllers\Admin\{AdminController,LoginController};
 use Controllers\Site\HomeController;
 use Controllers\Site\SiteCategoryController;
+use Controllers\Site\SiteProductController;
 use App\Controllers\Admin\Users\UserController;
 use App\Controllers\Admin\Categories\CategoryController;
 use App\Controllers\Admin\Products\ProductController;
@@ -70,6 +71,9 @@ $container["SiteCategoryController"] = function(Container $container){
     return new SiteCategoryController($container);
 };
 
+$container["SiteProductController"] = function(Container $container){
+    return new SiteProductController($container);
+};
 
 
 return $container;

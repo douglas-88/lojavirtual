@@ -20,6 +20,7 @@ $app = new App($container);
 
 $app->get('/',"HomeController:index")->setName("Home");
 $app->get('/categories/{id}',"SiteCategoryController:index");
+$app->get('/produtos/{url}',"SiteProductController:show");
 
 $app->group("/admin", function(App $app){
     

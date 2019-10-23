@@ -10,7 +10,7 @@ use App\Controllers\Controller;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-class SiteCategoryController extends Controller {
+class SiteProductController extends Controller {
 
 
     public function index(Request $request,Response $response) {
@@ -34,6 +34,26 @@ class SiteCategoryController extends Controller {
                    ];
         $template = new Page($options);
         $template->setTpl("category");
+    }
+
+    public function show(Request $request,Response $response){
+        $slug = $request->getAttribute("url");
+        $url = $this->getRouteByName("Home");
+
+        $produto = new Product();
+        $produto->getFromUrl($slug);
+
+
+        $options = [
+            "data" => [
+                "path_loja" => $_ENV["PATH_TEMPLATE_LOJA"],
+                "urlRoot"   => $url,
+                "categories" => $produto->getCategories()
+            ]
+        ];
+        $page = new Page($options);
+        $page->setTpl("product-detail",["product" => $produto->getValues()]);
+
     }
 
 }
