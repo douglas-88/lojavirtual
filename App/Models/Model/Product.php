@@ -273,6 +273,31 @@ class Product extends Model {
         return $file->moveTo($dir."minha-imagem".".".$extensao);
     }
 
+    public function getFromUrl($url){
+       $sql = new Sql();
+       $query = "SELECT * FROM tb_products WHERE desurl LIKE :url";
+       $p = $sql->select($query,[":url" => "%".$url."%"])[0];
+       $p["vlprice"] = self::formatPrice($p["vlprice"]);
+       $this->setData($p);
+
+    }
+
+    public function getCategories(){
+
+        $query = 'SELECT a.idcategory, a.descategory FROM tb_categories a INNER JOIN tb_categoriesproducts b ON a.idcategory = b.idcategory WHERE b.idproduct = :id';
+        $sql = new Sql();
+        $results = $sql->select($query,[":id" => $this->getidproduct()]);
+        /*
+        $categories = [];
+        foreach ($results as $item) {
+            array_push($categories,$item["descategory"]);
+        }
+        return implode($categories,", ");
+        */
+        return $results;
+
+    }
+
 }
 
 ?>
