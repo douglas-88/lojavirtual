@@ -287,13 +287,7 @@ class Product extends Model {
         $query = 'SELECT a.idcategory, a.descategory FROM tb_categories a INNER JOIN tb_categoriesproducts b ON a.idcategory = b.idcategory WHERE b.idproduct = :id';
         $sql = new Sql();
         $results = $sql->select($query,[":id" => $this->getidproduct()]);
-        /*
-        $categories = [];
-        foreach ($results as $item) {
-            array_push($categories,$item["descategory"]);
-        }
-        return implode($categories,", ");
-        */
+       
         return $results;
 
     }
