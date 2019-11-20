@@ -6,3 +6,4 @@
 .env
 App/config.php
 .idea/
+log/php.log

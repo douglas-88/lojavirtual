@@ -5,6 +5,7 @@ require_once("App/bootstrap.php");
 use App\Controllers\Admin\{AdminController,LoginController,UserController};
 use Model\DB\Sql;
 use Model\Page;
+use Model\Model\Cart;
 use Model\PageAdmin;
 use Model\Model\User;
 use Slim\App;
@@ -21,6 +22,15 @@ $app = new App($container);
 $app->get('/',"HomeController:index")->setName("Home");
 $app->get('/categories/{id}',"SiteCategoryController:index");
 $app->get('/produtos/{url}',"SiteProductController:show");
+
+$app->group("/carrinho", function(App $app){
+
+    $app->get('[/]',"SiteCartController:index")->setName("carrinho");
+    $app->get('/{idproduct}/add',"SiteCartController:add")->setName("carrinho_add");
+    $app->get('/{idproduct}/remove',"SiteCartController:remove")->setName("carrinho_remove");
+    $app->get('/idproduct}/removeAll',"SiteCartController:removeAll")->setName("carrinho_removeAll");
+    
+});
 
 $app->group("/admin", function(App $app){
     
@@ -76,4 +86,5 @@ $app->group("/admin/produtos",function(App $app){
 })->add("Permission:Verify");
 
 $app->run();
+
 ?>

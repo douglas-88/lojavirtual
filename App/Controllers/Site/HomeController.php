@@ -15,7 +15,8 @@ class HomeController extends Controller {
                       "data" => [
                                     "path_loja" => $_ENV["PATH_TEMPLATE_LOJA"],
                                     "produtos"  => Product::listAll(),
-                                    "urlRoot"   => $this->getRouteByName("Home")
+                                    "urlRoot"   => $this->getRouteByName("Home"),
+                                    "urlCarrinho" => $this->getRouteByName("carrinho")
                                 ]
                    ];
         $template = new Page($options);

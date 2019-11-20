@@ -8,3 +8,7 @@ RewriteEngine On
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ web.php [QSA,L]
+
+#PHP Erro's Log Register:
+php_flag log_errors on
+php_value error_log log/php.log
