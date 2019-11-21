@@ -172,9 +172,10 @@ class Category extends Model {
         return $products;
     }
 
-    public function getProductsPage($page = 1,$itensPerPage = 2){
+    public function getProductsPage($page = 1,$itensPerPage = 1){
 
         $start = ($page -1) * $itensPerPage;
+
         $sql = new Sql();
         $products = $sql->select("SELECT * FROM tb_products a 
             INNER JOIN tb_categoriesproducts b ON(a.idproduct = b.idproduct)

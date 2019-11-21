@@ -29,7 +29,8 @@ class SiteProductController extends Controller {
         $options = [
                      "data" => [
                                    "path_loja" => $_ENV["PATH_TEMPLATE_LOJA"],
-                                    "category" => $value
+                                    "category" => $value,
+                                     "urlCarrinho" => $this->getRouteByName("carrinho")
                                ]
                    ];
         $template = new Page($options);
@@ -48,7 +49,8 @@ class SiteProductController extends Controller {
             "data" => [
                 "path_loja" => $_ENV["PATH_TEMPLATE_LOJA"],
                 "urlRoot"   => $url,
-                "categories" => $produto->getCategories()
+                "categories" => $produto->getCategories(),
+                "urlCarrinho" => $this->getRouteByName("carrinho")
             ]
         ];
         $page = new Page($options);

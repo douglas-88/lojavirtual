@@ -30,12 +30,21 @@ class SiteCategoryController extends Controller {
         $page = (isset($_GET["page"])) ? intval($_GET["page"]) : 1;
         $pagination = $category->getProductsPage($page);
 
+        $maxlinks = 4;
+        $links_laterais = ceil($maxlinks / 2);
+        $inicio = $page - $links_laterais;
+        $limite = $page + $links_laterais;
+
         $pages = [];
-        for ($i = 1; $i < $pagination["total"] ; $i++){
-            array_push($pages,[
-                "link" => "/categories/{$idcategory}?page=".$i."#produtos",
-                "page" => $i
-            ]);
+
+        for ($i = $inicio; $i < $limite ; $i++){
+
+            if($i >= 1 && $i <= $pagination["pages"]) {
+                array_push($pages, [
+                    "link" => "/categories/{$idcategory}?page=" . $i . "#produtos",
+                    "page" => $i
+                ]);
+            }
         }
         $options = [
                      "data" => [

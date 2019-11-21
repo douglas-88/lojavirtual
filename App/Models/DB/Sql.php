@@ -25,7 +25,8 @@ class Sql {
         $this->db_user_password = getenv('DB_PASSWORD');
         $this->db_options = array(
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'"
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+            PDO::MYSQL_ATTR_USE_BUFFERED_QUERY
         );
 
         try {
@@ -36,7 +37,7 @@ class Sql {
             );
         } catch (\PDOException $e) {
             var_dump($e->getMessage());
-            die;
+            exit;
         }
 
 	}
@@ -59,20 +60,15 @@ class Sql {
 
 	}
 
-	public function query($rawQuery, $params = array())
+	public function query(string $rawQuery, array $params = array()):void
 	{
 
 		$stmt = $this->conn->prepare($rawQuery);
 
 		$this->setParams($stmt, $params);
 
-
-		if(!$stmt->execute()){
-		   $this->message = $stmt->errorInfo();
-		   var_dump($this->message);
-		   exit;
-		   }else{
-		    $this->message = false;
+        if(!$stmt->execute()){
+            $this->message = $stmt->errorInfo()[2];
         }
 
 	}
@@ -80,17 +76,21 @@ class Sql {
 	    return $this->message;
     }
 
-	public function select($rawQuery, $params = array()):array
+	public function select(string $rawQuery, array $params = array()):array
 	{
                 
 		$stmt = $this->conn->prepare($rawQuery);
 
 		$this->setParams($stmt, $params);
 
-		$stmt->execute();
+		if(!$stmt->execute()){
+            $this->message = $stmt->errorInfo()[2];
+        }
+		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $result;
 
 	}
+
 
 }

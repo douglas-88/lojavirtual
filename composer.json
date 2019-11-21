@@ -18,7 +18,8 @@
         "php-di/slim-bridge": "^2.0",
         "php-di/php-di": "^6.0",
         "slim/flash": "^0.4.0",
-        "vlucas/valitron": "^1.4"
+        "vlucas/valitron": "^1.4",
+        "filp/whoops": "^2.5"
     },
     "autoload": {
         "psr-4": {

@@ -19,6 +19,16 @@ class User extends Model {
     const SECRET = "HcodePhp7_Secret";
     protected $mensagens;
 
+    public static function getFromSession():User{
+        $user = new User;
+
+        if(isset($_SESSION[User::SESSION]) && (int) $_SESSION[User::SESSION]["iduser"] > 0){
+            $user->setData($_SESSION[User::SESSION]);
+        }
+
+        return $user;
+    }
+
     public static function login($login, $senha) {
 
         $sql = new Sql();
@@ -42,8 +52,31 @@ class User extends Model {
         endif;
     }
 
+    public static function checkLogin($inadmin = true):bool{
+        if(
+           !isset($_SESSION[User::SESSION])
+           OR
+           !$_SESSION[User::SESSION]
+           OR
+           !(int) $_SESSION[User::SESSION]["iduser"] > 0
+          ){
+            /** Não está Logado: */
+            return false;
+            /** Está Logado:*/
+        }else{
+            if($inadmin === true AND (bool)$_SESSION[User::SESSION]["inadmin"] === true){
+                return true;
+            }else if($inadmin === false){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
     public static function verifyLogin($inadmin = TRUE) {
         //Se o Usuário NÂO estiver Logado, redirecione-o para a página de Login:
+
         if (
                 !isset($_SESSION[User::SESSION])
                 OR
@@ -52,15 +85,17 @@ class User extends Model {
                 OR
                 (bool) $_SESSION[User::SESSION]["inadmin"] !== $inadmin
         ) {
-            /*
+              /**
               header("Location: /admin/login");
               exit;
-             * 
-             */
+               */
+
             return false;
         } else {
             return true;
         }
+
+
     }
 
     public static function logout() {

@@ -4,6 +4,7 @@ use App\Controllers\Admin\{AdminController,LoginController};
 use Controllers\Site\HomeController;
 use Controllers\Site\SiteCategoryController;
 use Controllers\Site\SiteProductController;
+use App\Controllers\Site\SiteCartController;
 use App\Controllers\Admin\Users\UserController;
 use App\Controllers\Admin\Categories\CategoryController;
 use App\Controllers\Admin\Products\ProductController;
@@ -73,6 +74,10 @@ $container["SiteCategoryController"] = function(Container $container){
 
 $container["SiteProductController"] = function(Container $container){
     return new SiteProductController($container);
+};
+
+$container["SiteCartController"] = function(Container $container){
+    return new SiteCartController($container);
 };
 
 
