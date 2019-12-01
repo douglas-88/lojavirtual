@@ -27,6 +27,11 @@ $container = $containerBuilder->build();
 /*
 return $container;
 */
+
+function formatPrice(string $number):string{
+    return number_format($number,2,",",".");
+}
+
 $container = new Container();
 
 $container->get('settings')->replace([
