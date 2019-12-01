@@ -18,12 +18,13 @@ class SiteCartController extends Controller
        $routeCarrinho        = $this->getRouteByName("carrinho");
 
        $cart = Cart::getFromSession();
+
        $options = [
            "data" => [
                        "path_loja"      => $_ENV["PATH_TEMPLATE_LOJA"],
                        "urlRoot"        => $this->getRouteByName("Home"),
                        "urlCarrinho"    => $routeCarrinho,
-
+                       "erro"           => $cart::getMsgErro(),
                        "cart"           => $cart->getValues(),
                        "products"       => $cart->getProducts()
                      ]
@@ -90,6 +91,25 @@ class SiteCartController extends Controller
 
         $cart = Cart::getFromSession();
         $cart->removeProduct($product,true);
+
+        $options = [
+            "data" => [
+                "path_loja" => $_ENV["PATH_TEMPLATE_LOJA"],
+                "urlRoot"   => $this->getRouteByName("Home"),
+                "urlCarrinho" => $this->getRouteByName("carrinho")
+            ]
+        ];
+        $url = $this->getRouteByName("carrinho");
+        return $response->withRedirect($url);
+
+    }
+
+    public function calculateFrete(Request $request,Response $response){
+        $post = $request->getParsedBody();
+        $zipcode = $post["zipcode"];
+
+        $cart = Cart::getFromSession();
+        $cart->setFrete($zipcode);
 
         $options = [
             "data" => [

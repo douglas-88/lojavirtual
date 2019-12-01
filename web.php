@@ -28,8 +28,9 @@ $app->group("/carrinho", function(App $app){
     $app->get('[/]',"SiteCartController:index")->setName("carrinho");
     $app->get('/{idproduct}/add',"SiteCartController:add")->setName("carrinho_add");
     $app->get('/{idproduct}/remove',"SiteCartController:remove")->setName("carrinho_remove");
-    $app->get('/idproduct}/removeAll',"SiteCartController:removeAll")->setName("carrinho_removeAll");
-    
+    $app->get('/{idproduct}/removeAll',"SiteCartController:removeAll")->setName("carrinho_removeAll");
+    $app->post('/frete',"SiteCartController:calculateFrete")->setName("calcula_frete");
+
 });
 
 $app->group("/admin", function(App $app){
