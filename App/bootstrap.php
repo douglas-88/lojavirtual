@@ -37,7 +37,8 @@ $container = new Container();
 $container->get('settings')->replace([
                                         'displayErrorDetails' => true,
                                         'determineRouteBeforeAppMiddleware' => true,
-                                        'debug' => true
+                                        'debug' => true,
+                                        'addContentLengthHeader' => false
                                     ]);
 
 $container["HomeController"] = function(Container $container){
