@@ -230,8 +230,9 @@ class Cart extends Model
        /*https://www.correios.com.br/a-a-z/limites-de-dimensoes-e-peso*/
 
        ($totais["comprimento"] > 105 OR $totais["comprimento"] < 15) ? $totais["comprimento"] = 15 : $totais["comprimento"];
-       ($totais["altura"] > 105 OR $totais["altura"] < 1) ? $totais["altura"] = 1 : $totais["altura"];
+       ($totais["altura"] > 105 OR $totais["altura"] < 1) ? $totais["altura"] = 10 : $totais["altura"];
        ($totais["largura"] > 105 OR $totais["largura"] < 10) ? $totais["largura"] = 10 : $totais["largura"];
+       ($totais["peso"] < 1) ? $totais["peso"] = 10 : $totais["peso"];
 
 
        $qs = http_build_query([
