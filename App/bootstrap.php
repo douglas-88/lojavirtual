@@ -2,6 +2,7 @@
 require_once("vendor/autoload.php");
 use App\Controllers\Admin\{AdminController,LoginController};
 use Controllers\Site\HomeController;
+use App\Controllers\Site\CheckoutController;
 use Controllers\Site\SiteCategoryController;
 use Controllers\Site\SiteProductController;
 use App\Controllers\Site\SiteCartController;
@@ -14,22 +15,19 @@ use Model\Model\User;
 use Slim\Container;
 use \App\Middlewares\PermissionMiddleware;
 use \Slim\Flash\Messages;
-/*
-use DI\Container;
-use DI\ContainerBuilder;
-$containerBuilder = new ContainerBuilder();
-/** OPCIONAIS: **/
-/*
-$containerBuilder->useAutowiring(false);
-$containerBuilder->addDefinitions(__DIR__ . '/config.php');
-$container = $containerBuilder->build();
-/** --- **/
-/*
-return $container;
-*/
+
 
 function formatPrice(string $number):string{
     return number_format($number,2,",",".");
+}
+
+function checkLogin(bool $inadmin):bool{
+    return User::checkLogin($inadmin);
+}
+
+function getUserName(){
+    $user = User::getFromSession();
+    return $user->getdeslogin();
 }
 
 $container = new Container();
@@ -84,6 +82,10 @@ $container["SiteProductController"] = function(Container $container){
 
 $container["SiteCartController"] = function(Container $container){
     return new SiteCartController($container);
+};
+
+$container["CheckoutController"] = function(Container $container){
+    return new CheckoutController($container);
 };
 
 
