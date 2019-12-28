@@ -59,6 +59,13 @@ $app->group("/admin", function(App $app){
     
 });
 
+$app->get("/forgot","LoginController:forgotSite")->setName("forgot-site");
+$app->get("/forgot/sent","LoginController:forgotSiteSent")->setName("forgot-site-sent");
+$app->get("/forgot/reset/{code}","LoginController:forgotSiteReset")->setName("forgot-site-reset");
+
+$app->post("/forgot","LoginController:forgotSitePost")->setName("forgot-site_form");
+$app->post("/forgot/reset","LoginController:forgotSiteResetPost")->setName("forgot-resetPost");
+
 //USERS ROUTE GROUP:
 $app->group("/admin/users", function(App $app) {
 

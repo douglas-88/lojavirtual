@@ -137,4 +137,107 @@ class LoginController extends Controller{
         $template = new PageAdmin($options);
         $template->setTpl("forgot-reset-success");
     }
+
+    /*******************************************
+     * Métodos de Recuperar a senha para o Site:
+     * *****************************************
+     */
+
+    public function forgotSite(){
+
+        $forgot_url = $this->getRouteByName("forgot_form");
+        $erros = $this->values["container"]->flash->getMessage("error")[0];
+
+
+        $options = [
+            "data" =>[
+                "erros" => $erros
+            ]
+
+        ];
+
+        $template = new Page($options);
+        $template->setTpl("forgot");
+
+    }
+
+    public function forgotSitePost(Request $request,Response $response){
+
+        $arguments = $request->getParsedBody();
+        $urlBase = $request->getUri()->getBaseUrl();
+        $urlReset = $this->values["router"]->pathFor("forgot-site-reset",["code" => "123"]);
+        $urlConcat = $urlBase.$urlReset;
+        $urlFormat = substr($urlConcat,0,strrpos($urlConcat,"/"));
+        if(User::checkLoginExist($arguments["email"])) {
+            $user = User::getForgot($arguments["email"], $urlFormat);
+            $url = $this->getRouteByName('forgot-site-sent');
+            return $this->values["response"]->withHeader('Location', $url);
+        }else{
+            $this->values["container"]->flash->addMessage("error","Nenhuma conta cadastrada com o e-mail: {$arguments["email"]}.");
+            $url = $this->getRouteByName('forgot-site');
+            return $this->values["response"]->withHeader('Location', $url);
+        }
+
+
+
+    }
+
+    public function forgotSiteSent(){
+
+        $url_form = $this->getRouteByName("forgot_post");
+
+        $options = [
+            "data" => [
+                "path_loja" => $_ENV["PATH_TEMPLATE_LOJA"],
+                "url_form" => $url_form
+            ]
+        ];
+        $template = new Page($options);
+        $template->setTpl("forgot-sent");
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * Ao se clicar no Link de Reset Password no e-mail, chamará esse método:
+     */
+    public function forgotSiteReset(Request $request,Response $response){
+
+
+        $getCode = substr($request->getUri()->getPath(),strrpos($request->getUri()->getPath(),"code")+strlen("code="),strlen($request->getUri()->getPath()));
+
+        $user = User::validForgotDecrypt($getCode);
+        $url_form = $this->getRouteByName("forgot-resetPost");
+        $options = [
+            "data" => [
+                "name"       => $user["desperson"],
+                "code"       => $getCode,
+                "urlForm"    => $url_form
+            ]
+        ];
+        $template = new Page($options);
+        $template->setTpl("forgot-reset");
+    }
+
+    public function forgotSiteResetPost(Request $request,Response $response){
+        $code     = $request->getParsedBody()["code"];
+        $password = $request->getParsedBody()["password"];
+
+        $forgot = User::validForgotDecrypt($code);
+        User::setForgotUsed($forgot["idrecovery"]);
+
+        $user = new User();
+        $user->get((int) $forgot["iduser"]);
+        $user->setPassword($password);
+
+        $url_form = $this->getRouteByName("login_form");
+        $options = [
+            "data" => [
+
+                "urlForm"    => $url_form
+            ]
+        ];
+        $template = new Page($options);
+        $template->setTpl("forgot-reset-success");
+    }
 }

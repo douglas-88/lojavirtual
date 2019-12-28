@@ -22,6 +22,8 @@ class Page {
     function __construct($opts = array(),$tpl_dir = "views") {
 
         $this->options = array_merge($this->defaults, $opts);
+        $this->options["data"]["path_loja"] = $_ENV["PATH_TEMPLATE_LOJA"];
+
         // Onde estarão localizadas as pastas das views:
         $config = array(
             "tpl_dir" => getenv("BASE_DIR") . DIRECTORY_SEPARATOR . $tpl_dir . DIRECTORY_SEPARATOR,
@@ -42,6 +44,7 @@ class Page {
     }
 
     private function setData($data = array()) {
+        //$data = array_merge(["path_loja" => $_ENV["PATH_TEMPLATE_LOJA"] ]);
         foreach ($data as $key => $value) {
             $this->tpl->assign($key, $value);
         }
