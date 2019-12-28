@@ -36,7 +36,23 @@ class PermissionMiddleware {
 
          return $response;
     }
-    
+
+    public function VerifyUser(Request $request, Response $response, $next) {
+        $route      = $request->getAttribute('route');
+        $routeName  = $route->getName();
+        $groups     = $route->getGroups();
+        $methods    = $route->getMethods();
+        $arguments  = $route->getArguments();
+
+        if(User::verifyLogin(false)){
+            $response = $next($request, $response);
+        }else{
+            $response = $response->withRedirect($this->getUrl("login"));
+        }
+
+        return $response;
+    }
+
     public function getUrl(string $name){
         $url = $this->container->get('router')->pathFor($name);
         return $url;

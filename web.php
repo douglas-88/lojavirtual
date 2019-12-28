@@ -23,6 +23,10 @@ $app->get('/',"HomeController:index")->setName("Home");
 $app->get('/categories/{id}',"SiteCategoryController:index");
 $app->get('/produtos/{url}',"SiteProductController:show");
 
+$app->get('/login',"CheckoutController:login")->setName("login");
+$app->post('/login',"CheckoutController:loginAction")->setName("login-action");
+$app->get('/logout',"CheckoutController:logoutAction")->setName("logout-action");
+
 $app->group("/carrinho", function(App $app){
 
     $app->get('[/]',"SiteCartController:index")->setName("carrinho");
@@ -32,6 +36,10 @@ $app->group("/carrinho", function(App $app){
     $app->post('/frete',"SiteCartController:calculateFrete")->setName("calcula_frete");
 
 });
+
+$app->group("/checkout",function(App $app){
+    $app->get('[/]',"CheckoutController:index")->setName("checkout");
+})->add("Permission:VerifyUser");
 
 $app->group("/admin", function(App $app){
     
