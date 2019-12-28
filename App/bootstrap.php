@@ -30,6 +30,10 @@ function getUserName(){
     return $user->getdeslogin();
 }
 
+function isEmpty(&$content){
+    return (!isset($content)) ? false : $content;
+}
+
 $container = new Container();
 
 $container->get('settings')->replace([

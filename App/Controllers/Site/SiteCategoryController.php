@@ -28,6 +28,7 @@ class SiteCategoryController extends Controller {
             $value = $category->get($idcategory);
         }
         $page = (isset($_GET["page"])) ? intval($_GET["page"]) : 1;
+        $page = (isset($_GET["page"])) ? intval($_GET["page"]) : 1;
         $pagination = $category->getProductsPage($page);
 
         $maxlinks = 4;
