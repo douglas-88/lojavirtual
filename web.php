@@ -27,6 +27,9 @@ $app->get('/login',"CheckoutController:login")->setName("login");
 $app->post('/login',"CheckoutController:loginAction")->setName("login-action");
 $app->get('/logout',"CheckoutController:logoutAction")->setName("logout-action");
 
+$app->get('/register',"CheckoutController:register")->setName("register");
+$app->post('/register',"CheckoutController:registerAction")->setName("register-action");
+
 $app->group("/carrinho", function(App $app){
 
     $app->get('[/]',"SiteCartController:index")->setName("carrinho");

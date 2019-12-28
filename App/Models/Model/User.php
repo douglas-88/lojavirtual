@@ -113,21 +113,22 @@ class User extends Model {
 
     public function save() {
 
+
         $sql = new Sql();
 
 
         $this->setdespassword(password_hash($this->getdespassword(), PASSWORD_DEFAULT, array("cost" => 12)));
 
         $results = $sql->select("CALL sp_users_save(:desperson,:deslogin,:despassword,:desemail,:nrphone,:inadmin)", array(
-            ":desperson" => $this->getdesperson(),
-            ":deslogin" => $this->getdeslogin(),
-            ":despassword" => User::getPasswordHash($this->getdespassword()),
-            ":desemail" => $this->getdesemail(),
-            ":nrphone" => $this->getnrphone(),
-            ":inadmin" => $this->getinadmin()
+            ":desperson"   => $this->getdesperson(),
+            ":deslogin"    => $this->getdeslogin(),
+            ":despassword" => $this->getdespassword(),
+            ":desemail"    => $this->getdesemail(),
+            ":nrphone"     => $this->getnrphone(),
+            ":inadmin"     => $this->getinadmin()
         ));
 
-        return $this->setData($results[0]);
+        return $this->setData($results)[0];
     }
 
     public function get(int $iduser) {
@@ -420,6 +421,16 @@ class User extends Model {
 
    public static function getPasswordHash($password){
         return password_hash($password,PASSWORD_DEFAULT,["cost" => 12]);
+   }
+
+   public static function checkLoginExist(string $login):bool{
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :deslogin",[
+            ":deslogin" => $login
+        ]);
+
+       return (count($results) > 0);
    }
 }
 
