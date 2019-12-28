@@ -398,6 +398,8 @@ class User extends Model {
        $result = $sql->query("
           UPDATE tb_users SET despassword = :password WHERE iduser = :iduser
        ",[":password" => $password_hash,":iduser" => $this->getiduser()]);
+
+       return $result;
    }
 
    public static function setError(string $msg):void

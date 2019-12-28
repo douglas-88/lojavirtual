@@ -60,7 +60,7 @@ class Sql {
 
 	}
 
-	public function query(string $rawQuery, array $params = array()):void
+	public function query(string $rawQuery, array $params = array()):bool
 	{
 
 		$stmt = $this->conn->prepare($rawQuery);
@@ -69,6 +69,8 @@ class Sql {
 
         if(!$stmt->execute()){
             $this->message = $stmt->errorInfo()[2];
+        }else{
+            return $stmt->execute();
         }
 
 	}
