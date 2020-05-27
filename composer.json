@@ -7,7 +7,7 @@
         }
     ],
     "require": {
-    	"phpmailer/phpmailer":"5.2.22",
+    	"phpmailer/phpmailer":"6.1.6",
     	"slim/slim":"3.12.1",
     	"rain/raintpl":"3.0.0",
         "vlucas/phpdotenv": "^3.3",
